@@ -1,15 +1,32 @@
-// excelJS test
-const http = require('http')
-const hostname = '127.0.0.1'
+import tempfile from 'tempfile'
+import ExcelJS from 'exceljs'
+import express from 'express'
 const port = 3000
+const app = express()
 
-const server = http.createServer((req, res) => {
+const initWorkbook = () => {
+  const workbook = new ExcelJS.Workbook()
+  const worksheet = workbook.addWorksheet('My Sheet')
+
+  worksheet.columns = [
+    { header: 'Id', key: 'id', width: 10 },
+    { header: 'Name', key: 'name', width: 32 },
+    { header: 'D.O.B.', key: 'DOB', width: 10 }
+  ]
+  worksheet.addRow({ id: 1, name: 'John Doe', dob: new Date(1970, 1, 1) })
+  worksheet.addRow({ id: 2, name: 'Jane Doe', dob: new Date(1965, 1, 7) })
+  return workbook
+}
+
+app.get('/', (req, res) => {
+  const workbook = initWorkbook()
   res.statusCode = 200
-
-  // res.setHeader('Content-Disposition', 'attachment; filename="SheetJS.xlsx"')
-  // res.end(XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' }))
+  const tempFilePath = tempfile({ extension: '.xlsx' })
+  workbook.xlsx.writeFile(tempFilePath).then(function () {
+    res.download(tempFilePath)
+  })
 })
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`)
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
 })
