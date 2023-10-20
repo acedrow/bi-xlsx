@@ -1,7 +1,7 @@
 import tempfile from 'tempfile'
 import ExcelJS from 'exceljs'
 import express from 'express'
-const port = 3000
+const port = process.env.PORT || 8080
 const app = express()
 
 const initWorkbook = () => {
@@ -9,12 +9,32 @@ const initWorkbook = () => {
   const worksheet = workbook.addWorksheet('My Sheet')
 
   worksheet.columns = [
-    { header: 'Id', key: 'id', width: 10 },
-    { header: 'Name', key: 'name', width: 32 },
-    { header: 'D.O.B.', key: 'DOB', width: 10 }
+    { key: 'A', width: 10 },
+    { key: 'B', width: 32 },
+    { key: 'C', width: 10 }
   ]
-  worksheet.addRow({ id: 1, name: 'John Doe', dob: new Date(1970, 1, 1) })
-  worksheet.addRow({ id: 2, name: 'Jane Doe', dob: new Date(1965, 1, 7) })
+
+  const row0 = worksheet.addRow({ A: 'A!', C: 'C!' })
+  row0.fill = {
+    type: 'pattern',
+    pattern: 'solid',
+    fgColor: { argb: 'ff4ccf70' }
+  }
+  row0.font = {
+    name: 'Arial Black',
+    color: { argb: '00000000' },
+    family: 2,
+    size: 14,
+    italic: false
+  }
+  const row1 = worksheet.addRow({ A: 'B should be dropdown', C: 'C!' })
+
+  worksheet.getCell('B2').dataValidation = {
+    type: 'list',
+    allowBlank: true,
+    formulae: ['One,Two,Three,Forr']
+  }
+
   return workbook
 }
 
@@ -23,7 +43,7 @@ app.get('/', (req, res) => {
   res.statusCode = 200
   const tempFilePath = tempfile({ extension: '.xlsx' })
   workbook.xlsx.writeFile(tempFilePath).then(function () {
-    res.download(tempFilePath)
+    res.download(tempFilePath, 'test.xlsx')
   })
 })
 
