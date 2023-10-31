@@ -7,17 +7,16 @@ module.exports = {
   },
   extends: 'standard',
   rules: {
-    'no-unused-vars': WARN
+    'no-unused-vars': WARN,
+    'object-curly-newline': ['error', { multiline: true }],
+    'object-curly-spacing': ['error', 'always'],
+    'object-property-newline': ['error', { allowAllPropertiesOnSameLine: true }]
   },
   overrides: [
     {
-      env: {
-        node: true
-      },
+      env: { node: true },
       files: ['.eslintrc.{js,cjs}'],
-      parserOptions: {
-        sourceType: 'script'
-      }
+      parserOptions: { sourceType: 'script' }
     }
   ],
   parserOptions: {

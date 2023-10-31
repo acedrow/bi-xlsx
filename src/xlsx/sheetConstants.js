@@ -37,23 +37,31 @@ const RESULTS_COLS = [
   { key: 'Z', width: COL_SIZE.l }
 ]
 
-const TITLE_ROW_PROPS = {
-  font: {
+const getFont = (size, bold) => {
+  return {
     name: 'Cambria',
     color: { argb: '00000000' },
     family: 2,
-    size: 16,
+    size: size ?? 11,
     italic: false,
-    bold: true
-  },
+    bold: !!bold
+  }
+}
+
+const TITLE_ROW_PROPS = {
   fill: {
     type: 'pattern',
     pattern: 'solid',
     fgColor: { argb: TITLE_ROW_BACKGROUND_COLOR_ARGB }
   },
-  alignment: {
-    horizontal: 'center'
-  }
+  alignment: { horizontal: 'center' }
 }
 
-export { RESULTS_COLS, TITLE_ROW_PROPS }
+const EVENT_TIERS = [
+  'Classic', 'Regional', 'Conference'
+]
+
+const FINALS_TYPE = [
+  'Round Robin', 'Bracket'
+]
+export { RESULTS_COLS, TITLE_ROW_PROPS, getFont, EVENT_TIERS, FINALS_TYPE }
