@@ -1,12 +1,14 @@
+const TITLE_ROW_BACKGROUND_COLOR_ARGB = 'ffabcb95'
+
 const COL_SIZE = {
-  xs: 4,
+  xs: 3.5,
   s: 6,
   m: 10,
-  l: 16,
-  xl: 24
+  l: 13,
+  xl: 21
 }
 
-const WORKSHEET_COLS = [
+const RESULTS_COLS = [
   { key: 'A', width: COL_SIZE.l },
   { key: 'B', width: COL_SIZE.xl },
   { key: 'C', width: COL_SIZE.s },
@@ -35,4 +37,23 @@ const WORKSHEET_COLS = [
   { key: 'Z', width: COL_SIZE.l }
 ]
 
-export { WORKSHEET_COLS }
+const TITLE_ROW_PROPS = {
+  font: {
+    name: 'Cambria',
+    color: { argb: '00000000' },
+    family: 2,
+    size: 16,
+    italic: false,
+    bold: true
+  },
+  fill: {
+    type: 'pattern',
+    pattern: 'solid',
+    fgColor: { argb: TITLE_ROW_BACKGROUND_COLOR_ARGB }
+  },
+  alignment: {
+    horizontal: 'center'
+  }
+}
+
+export { RESULTS_COLS, TITLE_ROW_PROPS }

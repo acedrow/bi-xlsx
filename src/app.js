@@ -1,6 +1,6 @@
 import tempfile from 'tempfile'
 import express from 'express'
-import generateXlsx from './sheetGeneration/generateSheet.js'
+import generateXlsx from './xlsx/index.js'
 const port = process.env.PORT || 8080
 const app = express()
 
