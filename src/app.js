@@ -14,6 +14,18 @@ app.get('/', (req, res) => {
   })
 })
 
+/**
+expects JSON body in the shape of:
+{
+  eventName: ${name_string_variable},
+  date: ${date_string_variable},
+  location: ${location_string_variable},
+  teams: [
+    "team1", "team2"
+      ]
+}
+*/
+
 app.post('/generateSpreadsheet', (req, res) => {
   console.log('post request', req.body)
   const workbook = generateXlsx()
@@ -22,6 +34,11 @@ app.post('/generateSpreadsheet', (req, res) => {
   workbook.xlsx.writeFile(tempFilePath).then(function () {
     res.download(tempFilePath, 'test.xlsx')
   })
+})
+
+app.post('/echoBody', (req, res) => {
+  console.log('post request', req.body)
+  res.json({ requestBody: req.body })
 })
 
 app.listen(port, () => {
