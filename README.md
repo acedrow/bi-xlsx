@@ -2,8 +2,8 @@
 Tournament data spreadsheet generation for Buhurt International
 
 ## first time setup:
-- install node
 - install nvm
+- install node v18 with `nvm install 18.18.2`
 - install google cloud cli (if deploying)
 
 ## Running dev:
@@ -12,6 +12,5 @@ Tournament data spreadsheet generation for Buhurt International
 - run with `npm run dev`
 
 ## deloying to Google Cloud:
-- must be logged into google as Linden
 - `gcloud app deploy`
 
