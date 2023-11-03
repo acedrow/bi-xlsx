@@ -1,9 +1,32 @@
 import tempfile from 'tempfile'
 import express from 'express'
+import cors from 'cors'
 import generateXlsx from './xlsx/index.js'
+import fs from 'fs'
+import crypto from 'crypto'
+import path from 'path'
+
 const port = process.env.PORT || 8080
+
 const app = express()
+
+app.use(cors())
 app.use(express.json()) // <==== parse request body as JSON
+
+const corsOptions = {
+  origin: 'https://www.buhurtinternational.com/',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+
+app.post('/generateSpreadsheet', cors(corsOptions), (req, res) => {
+  console.log('post request', req.body)
+  const workbook = generateXlsx()
+  res.statusCode = 200
+  const tempFilePath = tempfile({ extension: '.xlsx' })
+  workbook.xlsx.writeFile(tempFilePath).then(function () {
+    res.download(tempFilePath, 'test.xlsx')
+  })
+})
 
 app.get('/', (req, res) => {
   const workbook = generateXlsx()
@@ -14,29 +37,7 @@ app.get('/', (req, res) => {
   })
 })
 
-/**
-expects JSON body in the shape of:
-{
-  eventName: ${name_string_variable},
-  date: ${date_string_variable},
-  location: ${location_string_variable},
-  teams: [
-    "team1", "team2"
-      ]
-}
-*/
-
-app.post('/generateSpreadsheet', (req, res) => {
-  console.log('post request', req.body)
-  const workbook = generateXlsx()
-  res.statusCode = 200
-  const tempFilePath = tempfile({ extension: '.xlsx' })
-  workbook.xlsx.writeFile(tempFilePath).then(function () {
-    res.download(tempFilePath, 'test.xlsx')
-  })
-})
-
-app.post('/echoBody', (req, res) => {
+app.post('/echoBody', cors(corsOptions), (req, res) => {
   console.log('post request', req.body)
   res.json({ requestBody: req.body })
 })
