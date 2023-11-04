@@ -19,16 +19,16 @@ const generateTitleRows = (worksheet) => {
 }
 
 // TODO: need to pull event name, location, and date in from request object
-const generateHeaderRows = (worksheet) => {
-  const row3 = worksheet.addRow(
-    {
-      A: 'Event Name:',
-      B: 'TEST EVENT NAME',
-      T: 'Event Date:',
-      W: 'TEST DATE',
-      Y: 'Event Tier:',
-      Z: 'Classic'
-    })
+const generateHeaderRows = (worksheet, eventName, date, location, teams) => {
+  console.log('console: ' + eventName, date, location, teams)
+  const row3 = worksheet.addRow({
+    A: 'Event Name:',
+    B: eventName,
+    T: 'Event Date:',
+    W: date,
+    Y: 'Event Tier:',
+    Z: 'Classic'
+  })
 
   row3.font = getFont(11, true)
   worksheet.getCell('Z3').dataValidation = {
@@ -40,15 +40,15 @@ const generateHeaderRows = (worksheet) => {
   worksheet.mergeCells('T3:V3')
   worksheet.mergeCells('W3:X3')
 
-  const row4 = worksheet.addRow(
-    {
-      A: 'Event Location:',
-      B: 'TEST EVENT LOC',
-      T: 'Finals Type:',
-      W: 'Round Robin',
-      Y: 'Tier Mult.',
-      Z: { formula: '=IF(Z3="Regional",1.5,IF(Z3="Conference",2,1))' }
-    })
+  const row4 = worksheet.addRow({
+    A: 'Event Location:',
+    B: location,
+    T: 'Finals Type:',
+    W: 'Round Robin',
+    Y: 'Tier Mult.',
+    Z: { formula: '=IF(Z3="Regional",1.5,IF(Z3="Conference",2,1))' }
+  })
+
   row4.font = getFont(11, true)
   worksheet.getCell('W4').dataValidation = {
     type: 'list',
@@ -71,6 +71,7 @@ const generateTeamHeaders = (worksheet) => {
       N: 'Score  '
 
     })
+  row5.font = getFont(11, true)
   worksheet.mergeCells('A5:A6')
   worksheet.mergeCells('B5:B6')
   worksheet.mergeCells('C5:C6')
@@ -80,12 +81,23 @@ const generateTeamHeaders = (worksheet) => {
   worksheet.mergeCells('T5:V5')
 }
 
-const generateResultsSheet = (workbook) => {
-  const resultsSheet = workbook.addWorksheet('results')
+const generateTeamDataRows = (worksheet, teams) => {
+  teams.forEach(team => {
+    const row = {
+      A: team.id,
+      B: team.name
+    }
+    worksheet.addRow(row)
+  })
+}
+
+const generateResultsSheet = (workbook, eventName, { date, location, teams }) => {
+  const resultsSheet = workbook.addWorksheet('Results')
   resultsSheet.columns = RESULTS_COLS
   generateTitleRows(resultsSheet)
-  generateHeaderRows(resultsSheet)
+  generateHeaderRows(resultsSheet, eventName, date, location, teams)
   generateTeamHeaders(resultsSheet)
+  generateTeamDataRows(resultsSheet, teams)
 }
 
 export default generateResultsSheet
