@@ -18,9 +18,7 @@ const generateTitleRows = (worksheet) => {
   worksheet.mergeCells('A2:Z2')
 }
 
-// TODO: need to pull event name, location, and date in from request object
-const generateHeaderRows = (worksheet, eventName, date, location, teams) => {
-  console.log('console: ' + eventName, date, location, teams)
+const generateHeaderRows = (worksheet, eventName, date, location) => {
   const row3 = worksheet.addRow({
     A: 'Event Name:',
     B: eventName,
@@ -82,16 +80,18 @@ const generateTeamHeaders = (worksheet) => {
 }
 
 const generateTeamDataRows = (worksheet, teams) => {
+  console.log('generateTeamDataRows teams', teams)
   teams.forEach(team => {
-    const row = {
+    const addedRow = worksheet.addRow({
       A: team.id,
       B: team.name
-    }
-    worksheet.addRow(row)
-  })
+    })
+    addedRow.font = getFont(11, false)
+  }
+  )
 }
 
-const generateResultsSheet = (workbook, eventName, { date, location, teams }) => {
+const generateResultsSheet = (workbook, { eventName, date, location, teams }) => {
   const resultsSheet = workbook.addWorksheet('Results')
   resultsSheet.columns = RESULTS_COLS
   generateTitleRows(resultsSheet)
