@@ -108,7 +108,7 @@ const generateTeamHeaders = (worksheet) => {
   worksheet.mergeCells('Z5:Z6')
 }
 
-const generateTeamDataRows = (worksheet, teams) => {
+const generateTeamDataRows = (worksheet, teams = []) => {
   console.log('generateTeamDataRows teams', teams)
   teams.forEach(team => {
     const addedRow = worksheet.addRow({
@@ -227,15 +227,15 @@ const generateBracketsSheet = (workbook) => {
     F: 'R3',
     G: 'R4',
     H: 'R5',
-    I: 'FW',
-    J: 'FL',
+    I: 'Win',
+    J: 'Los',
     K: 'Win',
     L: 'Draw',
     M: 'Loss',
-    N: 'Round Neutral',
+    N: 'Ratio',
     O: 'Standing',
     P: 'Ground',
-    Q: 'Stand/Ground Diff',
+    Q: 'Ratio',
     R: 'Yellow Card',
     S: 'Red Card'
   }
@@ -246,22 +246,24 @@ const generateBracketsSheet = (workbook) => {
     cell.font = headerFont
     cell.alignment = wrapAlignmentValue
   })
-  bracketsSheet.columns.forEach(column => {
+  setColumnWidths(bracketsSheet)
+}
+
+const setColumnWidths = (worksheet) => {
+  worksheet.columns.forEach((column) => {
     let maxLength = 0
 
-    // Loop through all cells in a column
-    column.eachCell({ includeEmpty: true }, cell => {
-      // Calculate the maximum length of cell value
-      const cellValue = cell.value
-      let cellLength = (cellValue && cellValue.toString().length) || 0
-
-      // Add extra space for aesthetics
-      cellLength += 2
+    column.eachCell({ includeEmpty: true }, (cell) => {
+      let cellLength = cell.value ? cell.value.toString().length : 0
+      if (cell.value && typeof cell.value === 'string' && cell.value.includes('\n')) {
+        const splitValue = cell.value.split('\n')
+        cellLength = Math.max(...splitValue.map(line => line.length))
+      }
       if (cellLength > maxLength) {
         maxLength = cellLength
       }
     })
-    column.width = maxLength
+    column.width = maxLength + 2
   })
 }
 
