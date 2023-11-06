@@ -73,25 +73,34 @@ const generateTeamHeaders = (worksheet) => {
     X: 'Placement',
     Y: 'Rank adj. Points',
     Z: 'Final Awarded Points'
-  });
-
-  ['A', 'B', 'C', 'D', 'I', 'N', 'W', 'X', 'Y', 'Z'].forEach((col) => {
-    const cell = row5.getCell(col)
-    cell.font = headerFont
-    cell.alignment = wrapAlignment
   })
+
+  row5.font = headerFont
+  row5.alignment = wrapAlignment
 
   // Add headers for row 6 and styles
-  const headersRow6 = ['Fw', 'FL', 'Ff', 'Fw/R', 'F/T', 'Rw', 'Rd', 'RI', 'Rf', 'Rw/R', 'A', 'A/R', 'G', 'G/R', 'A/G D', 'A/G R', 'YK', 'RK', 'Total']
-  const row6 = worksheet.addRow()
-  headersRow6.forEach((title, index) => {
-    // Get the column letter from the index offset by 4
-    const colLetter = String.fromCharCode('D'.charCodeAt(0) + index)
-    const cell = row6.getCell(colLetter)
-    cell.value = title
-    cell.font = headerFont
-    cell.alignment = wrapAlignment
+  const row6 = worksheet.addRow({
+    D: 'Fw',
+    E: 'FL',
+    F: 'Ff',
+    G: 'Fw/R',
+    H: 'Rw',
+    I: 'Rd',
+    J: 'RI',
+    K: 'Rf',
+    L: 'Rw/R',
+    M: 'A',
+    O: 'A/R',
+    P: 'G',
+    Q: 'G/R',
+    R: 'A/G D',
+    S: 'A/G R',
+    T: 'YK',
+    U: 'RK',
+    V: 'Total'
   })
+  row6.font = headerFont
+  row6.alignment = wrapAlignment
 
   worksheet.mergeCells('A5:A6')
   worksheet.mergeCells('B5:B6')
@@ -106,7 +115,6 @@ const generateTeamHeaders = (worksheet) => {
 }
 // generates the team names + id
 const generateTeamDataRows = (worksheet, teams) => {
-  console.log('Adding teams to results  (sheet1):', teams)
   teams.forEach(team => {
     const addedRow = worksheet.addRow({
       A: team.id,

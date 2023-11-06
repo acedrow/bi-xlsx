@@ -3,6 +3,19 @@ import express from 'express'
 import cors from 'cors'
 import generateXlsx from './xlsx/index.js'
 
+const TEST_DATA = {
+  eventName: 'test event',
+  date: '1/2/3',
+  location: 'St. Paul',
+  teams: [
+    { name: 'wyverns', id: 'tha best' },
+    { name: 'dfc', id: 'not tha best' },
+    { name: 'knyaz', id: 'big boiz' }
+
+  ]
+
+}
+
 const port = process.env.PORT || 8080
 
 const app = express()
@@ -27,7 +40,7 @@ app.post('/generateSpreadsheet', cors(corsOptions), (req, res) => {
 
 // TODO: for testing, delete for prod
 app.get('/', (req, res) => {
-  const workbook = generateXlsx(req.body)
+  const workbook = generateXlsx(TEST_DATA)
   res.statusCode = 200
   const tempFilePath = tempfile({ extension: '.xlsx' })
   workbook.xlsx.writeFile(tempFilePath).then(function () {
