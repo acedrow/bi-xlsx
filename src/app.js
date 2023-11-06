@@ -1,18 +1,19 @@
+// TODO: set up pre-commit hook
 import tempfile from 'tempfile'
 import express from 'express'
 import cors from 'cors'
 import generateXlsx from './xlsx/index.js'
 
-const TEST_DATA = {
-  eventName: 'test event',
-  date: '1/2/3',
-  location: 'St. Paul',
-  teams: [
-    { name: 'wyverns', id: 'tha best' },
-    { name: 'dfc', id: 'tha' },
-    { name: 'knyaz', id: 'big boiz' }
-  ]
-}
+// const TEST_DATA = {
+//   eventName: 'test event',
+//   date: '1/2/3',
+//   location: 'St. Paul',
+//   teams: [
+//     { name: 'wyverns', id: 'tha best' },
+//     { name: 'dfc', id: 'tha' },
+//     { name: 'knyaz', id: 'big boiz' }
+//   ]
+// }
 
 const port = process.env.PORT || 8080
 
@@ -38,7 +39,7 @@ app.post('/generateSpreadsheet', cors(corsOptions), (req, res) => {
 
 // TODO: for testing, delete for prod
 app.get('/', (req, res) => {
-  const workbook = generateXlsx(TEST_DATA)
+  const workbook = generateXlsx(req.body)
   res.statusCode = 200
   const tempFilePath = tempfile({ extension: '.xlsx' })
   workbook.xlsx.writeFile(tempFilePath).then(function () {

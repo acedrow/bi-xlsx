@@ -1,10 +1,10 @@
+// TODO: Linden: review this file
 import { RESULTS_COLS, getFont } from './sheetConstants.js'
 
 // sheet 2 Pools
 
 // adding all teams to to the pools
 const addTeamsToPoolsSheet = (poolsSheet, teams) => {
-  console.log('Adding teams to pools  (sheet2):', teams)
   // Assuming row 1 and 2 are for headers
   const currentRow = 3 // Start from row 3
   teams.forEach((team, index) => {
