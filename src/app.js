@@ -9,11 +9,9 @@ const TEST_DATA = {
   location: 'St. Paul',
   teams: [
     { name: 'wyverns', id: 'tha best' },
-    { name: 'dfc', id: 'not tha best' },
+    { name: 'dfc', id: 'tha' },
     { name: 'knyaz', id: 'big boiz' }
-
   ]
-
 }
 
 const port = process.env.PORT || 8080
