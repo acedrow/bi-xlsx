@@ -1,5 +1,5 @@
 import { RESULTS_COLS, TITLE_ROW_PROPS, getFont } from './sheetConstants.js'
-
+// sheet 1 Results
 const generateTitleRows = (worksheet) => {
 // ROW 1
   worksheet.addRow({ A: 'BUHURT INTERNATIONAL' })
@@ -59,28 +59,62 @@ const generateHeaderRows = (worksheet, eventName, date, location) => {
 }
 
 const generateTeamHeaders = (worksheet) => {
-  const row5 = worksheet.addRow(
-    {
-      A: 'Team/Fighter ID',
-      B: 'Team',
-      C: 'T',
-      D: 'Fights',
-      I: 'Rounds',
-      N: 'Score  '
+  const headerFont = getFont(11, true)
+  const wrapAlignment = { vertical: 'middle', horizontal: 'center', wrapText: true }
+  // Add headers for row 5 with common font and alignment
+  const row5 = worksheet.addRow({
+    A: 'Team/Fighter ID',
+    B: 'Team',
+    C: 'T',
+    D: 'Fights',
+    I: 'Rounds',
+    N: 'Score',
+    W: 'Points',
+    X: 'Placement',
+    Y: 'Rank adj. Points',
+    Z: 'Final Awarded Points'
+  })
 
-    })
-  row5.font = getFont(11, true)
+  row5.font = headerFont
+  row5.alignment = wrapAlignment
+
+  // Add headers for row 6 and styles
+  const row6 = worksheet.addRow({
+    D: 'Fw',
+    E: 'FL',
+    F: 'Ff',
+    G: 'Fw/R',
+    H: 'Rw',
+    I: 'Rd',
+    J: 'RI',
+    K: 'Rf',
+    L: 'Rw/R',
+    M: 'A',
+    O: 'A/R',
+    P: 'G',
+    Q: 'G/R',
+    R: 'A/G D',
+    S: 'A/G R',
+    T: 'YK',
+    U: 'RK',
+    V: 'Total'
+  })
+  row6.font = headerFont
+  row6.alignment = wrapAlignment
+
   worksheet.mergeCells('A5:A6')
   worksheet.mergeCells('B5:B6')
   worksheet.mergeCells('C5:C6')
   worksheet.mergeCells('D5:H5')
   worksheet.mergeCells('I5:M5')
   worksheet.mergeCells('N5:S5')
-  worksheet.mergeCells('T5:V5')
+  worksheet.mergeCells('W5:W6')
+  worksheet.mergeCells('X5:X6')
+  worksheet.mergeCells('Y5:Y6')
+  worksheet.mergeCells('Z5:Z6')
 }
-
+// generates the team names + id
 const generateTeamDataRows = (worksheet, teams) => {
-  console.log('generateTeamDataRows teams', teams)
   teams.forEach(team => {
     const addedRow = worksheet.addRow({
       A: team.id,
