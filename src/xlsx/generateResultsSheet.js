@@ -1,8 +1,5 @@
-/* eslint-disable no-undef */
-/* eslint-disable no-sequences */
-/* eslint-disable no-unexpected-multiline */
 import { RESULTS_COLS, TITLE_ROW_PROPS, getFont } from './sheetConstants.js'
-
+// sheet 1 Results
 const generateTitleRows = (worksheet) => {
 // ROW 1
   worksheet.addRow({ A: 'BUHURT INTERNATIONAL' })
@@ -107,9 +104,9 @@ const generateTeamHeaders = (worksheet) => {
   worksheet.mergeCells('Y5:Y6')
   worksheet.mergeCells('Z5:Z6')
 }
-
-const generateTeamDataRows = (worksheet, teams = []) => {
-  console.log('generateTeamDataRows teams', teams)
+// generates the team names + id
+const generateTeamDataRows = (worksheet, teams) => {
+  console.log('Adding teams to results  (sheet1):', teams)
   teams.forEach(team => {
     const addedRow = worksheet.addRow({
       A: team.id,
@@ -121,15 +118,32 @@ const generateTeamDataRows = (worksheet, teams = []) => {
 }
 
 // sheet 2 Pools
-const generatePoolsSheet = (workbook) => {
+
+// adding all teams to to the pools
+const addTeamsToPoolsSheet = (poolsSheet, teams) => {
+  console.log('Adding teams to pools  (sheet2):', teams)
+  // Assuming row 1 and 2 are for headers
+  const currentRow = 3 // Start from row 3
+  teams.forEach((team, index) => {
+    // The library might allow specifying the row number
+    const addedRow = poolsSheet.insertRow(currentRow + index, {
+      A: team.id,
+      B: team.name
+    })
+    addedRow.font = getFont(11, false)
+  })
+}
+
+const generatePoolsSheet = (workbook, teams) => {
   const headerFont = getFont(11, true)
-  const wrapAlignmentTitel = { vertical: 'middle', horizontal: 'center', wrapText: true }
+  const wrapAlignmentTitle = { vertical: 'middle', horizontal: 'center', wrapText: true }
   const wrapAlignmentValue = { vertical: 'middle', horizontal: 'center', wrapText: false }
   const poolsSheet = workbook.addWorksheet('Pools')
-
   poolsSheet.columns = RESULTS_COLS
 
-  // Merge cells for the header
+  addTeamsToPoolsSheet(poolsSheet, teams)
+
+  // Merge cells for the header - This should be done only once, not inside the loop
   poolsSheet.mergeCells('A1:A2')
   poolsSheet.mergeCells('B1:B2')
   poolsSheet.mergeCells('C1:C2')
@@ -155,8 +169,10 @@ const generatePoolsSheet = (workbook) => {
     const cell = poolsSheet.getCell(`${col}1`)
     cell.value = value
     cell.font = headerFont
-    cell.alignment = wrapAlignmentTitel
+    cell.alignment = wrapAlignmentTitle
   })
+
+  // Set the second row of header values
   const headerRowValues2 = {
     D: 'R1',
     E: 'R2',
@@ -175,6 +191,7 @@ const generatePoolsSheet = (workbook) => {
     R: 'YK',
     S: 'RK'
   }
+
   Object.entries(headerRowValues2).forEach(([col, value]) => {
     const cell = poolsSheet.getCell(`${col}2`)
     cell.value = value
@@ -227,15 +244,15 @@ const generateBracketsSheet = (workbook) => {
     F: 'R3',
     G: 'R4',
     H: 'R5',
-    I: 'Win',
-    J: 'Los',
+    I: 'FW',
+    J: 'FL',
     K: 'Win',
     L: 'Draw',
     M: 'Loss',
-    N: 'Ratio',
+    N: 'Round Neutral',
     O: 'Standing',
     P: 'Ground',
-    Q: 'Ratio',
+    Q: 'Stand/Ground Diff',
     R: 'Yellow Card',
     S: 'Red Card'
   }
@@ -246,24 +263,22 @@ const generateBracketsSheet = (workbook) => {
     cell.font = headerFont
     cell.alignment = wrapAlignmentValue
   })
-  setColumnWidths(bracketsSheet)
-}
-
-const setColumnWidths = (worksheet) => {
-  worksheet.columns.forEach((column) => {
+  bracketsSheet.columns.forEach(column => {
     let maxLength = 0
 
-    column.eachCell({ includeEmpty: true }, (cell) => {
-      let cellLength = cell.value ? cell.value.toString().length : 0
-      if (cell.value && typeof cell.value === 'string' && cell.value.includes('\n')) {
-        const splitValue = cell.value.split('\n')
-        cellLength = Math.max(...splitValue.map(line => line.length))
-      }
+    // Loop through all cells in a column
+    column.eachCell({ includeEmpty: true }, cell => {
+      // Calculate the maximum length of cell value
+      const cellValue = cell.value
+      let cellLength = (cellValue && cellValue.toString().length) || 0
+
+      // Add extra space for aesthetics
+      cellLength += 2
       if (cellLength > maxLength) {
         maxLength = cellLength
       }
     })
-    column.width = maxLength + 2
+    column.width = maxLength
   })
 }
 
@@ -274,7 +289,7 @@ const generateResultsSheet = (workbook, { eventName, date, location, teams }) =>
   generateHeaderRows(resultsSheet, eventName, date, location, teams)
   generateTeamHeaders(resultsSheet)
   generateTeamDataRows(resultsSheet, teams)
-  generatePoolsSheet(workbook)
+  generatePoolsSheet(workbook, teams)
   generateBracketsSheet(workbook)
 }
 
