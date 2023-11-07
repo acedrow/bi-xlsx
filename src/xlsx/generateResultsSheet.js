@@ -60,15 +60,16 @@ const generateHeaderRows = (worksheet, eventName, date, location) => {
 
 const generateTeamHeaders = (worksheet) => {
   const headerFont = getFont(11, true)
-  const wrapAlignment = { vertical: 'middle', horizontal: 'center', wrapText: true }
+  const wrapAlignment = { vertical: 'middle', horizontal: 'center', wrapText: false }
   // Add headers for row 5 with common font and alignment
   const row5 = worksheet.addRow({
-    A: 'Team/Fighter ID',
+    A: 'ID',
     B: 'Team',
     C: 'T',
     D: 'Fights',
     I: 'Rounds',
     N: 'Score',
+    T: 'Cards',
     W: 'Points',
     X: 'Placement',
     Y: 'Rank adj. Points',
@@ -80,25 +81,31 @@ const generateTeamHeaders = (worksheet) => {
 
   // Add headers for row 6 and styles
   const row6 = worksheet.addRow({
-    D: 'Fw',
-    E: 'FL',
-    F: 'Ff',
-    G: 'Fw/R',
-    H: 'Rw',
-    I: 'Rd',
-    J: 'RI',
-    K: 'Rf',
-    L: 'Rw/R',
-    M: 'A',
-    O: 'A/R',
-    P: 'G',
-    Q: 'G/R',
-    R: 'A/G D',
-    S: 'A/G R',
-    T: 'YK',
-    U: 'RK',
+    // Fights
+    D: 'Won',
+    E: 'Loss',
+    F: 'Total',
+    G: 'Win Ratio',
+    // H: '', // will not be used but keep it ?
+    // Rounds
+    I: 'Win',
+    J: 'Draw',
+    K: 'Loss',
+    L: 'Total',
+    M: 'win ratio',
+    // Active/Grounded
+    N: 'Active',
+    O: 'per round',
+    P: 'Grounded',
+    Q: 'per round',
+    R: 'A/G difference', // active versus ground difference
+    S: 'A/G Ratio', // active ground ratio read "kill/death Ratio"
+    // penaties
+    T: 'Yellow',
+    U: 'Red',
     V: 'Total'
   })
+
   row6.font = headerFont
   row6.alignment = wrapAlignment
 
@@ -112,7 +119,11 @@ const generateTeamHeaders = (worksheet) => {
   worksheet.mergeCells('X5:X6')
   worksheet.mergeCells('Y5:Y6')
   worksheet.mergeCells('Z5:Z6')
+  worksheet.mergeCells('T5:V5')
+
+  worksheet.getColumn('H').hidden = true
 }
+
 // generates the team names + id
 const generateTeamDataRows = (worksheet, teams) => {
   teams.forEach(team => {

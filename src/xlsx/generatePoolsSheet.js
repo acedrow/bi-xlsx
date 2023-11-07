@@ -1,20 +1,36 @@
 // TODO: Linden: review this file
 import { RESULTS_COLS, getFont } from './sheetConstants.js'
 
-// sheet 2 Pools
-
 // adding all teams to to the pools
 const addTeamsToPoolsSheet = (poolsSheet, teams) => {
-  // Assuming row 1 and 2 are for headers
-  const currentRow = 3 // Start from row 3
   teams.forEach((team, index) => {
-    // The library might allow specifying the row number
-    const addedRow = poolsSheet.insertRow(currentRow + index, {
-      A: team.id,
-      B: team.name
-    })
+    const rowIndex = 3 + index
+    // commented out the team + id (maybe we will use it maybe not)
+    const addedRow = poolsSheet.insertRow(rowIndex /*, {
+      // B: team.id,
+      // C: team.name
+    } */)
     addedRow.font = getFont(11, false)
+    // Merge cells from the second team
+    if (index % 2 === 1) {
+      const startRow = rowIndex - 1
+      const endRow = rowIndex
+      poolsSheet.mergeCells(`A${startRow}:A${endRow}`)
+    }
   })
+
+  // Check if uneven, yes => add and merge one more row
+  if (teams.length % 2 === 1) {
+    const lastRowIndex = 3 + teams.length
+    poolsSheet.insertRow(lastRowIndex, {
+      B: null,
+      C: null
+    })
+    // Merge this empty row with the second to last row
+    const startRow = lastRowIndex - 1
+    const endRow = lastRowIndex
+    poolsSheet.mergeCells(`A${startRow}:A${endRow}`)
+  }
 }
 
 const generatePoolsSheet = (workbook, { teams }) => {
@@ -26,7 +42,7 @@ const generatePoolsSheet = (workbook, { teams }) => {
 
   addTeamsToPoolsSheet(poolsSheet, teams)
 
-  // Merge cells for the header - This should be done only once, not inside the loop
+  // Merge cells for the header
   poolsSheet.mergeCells('A1:A2')
   poolsSheet.mergeCells('B1:B2')
   poolsSheet.mergeCells('C1:C2')
@@ -36,7 +52,6 @@ const generatePoolsSheet = (workbook, { teams }) => {
   poolsSheet.mergeCells('O1:Q1')
   poolsSheet.mergeCells('R1:S1')
 
-  // Set the header values for the first row
   const headerRowValues = {
     A: 'Fight',
     B: 'Team/Fighter ID',
@@ -55,24 +70,24 @@ const generatePoolsSheet = (workbook, { teams }) => {
     cell.alignment = wrapAlignmentTitle
   })
 
-  // Set the second row of header values
+  // Set the header values for the second row
   const headerRowValues2 = {
     D: 'R1',
     E: 'R2',
     F: 'R3',
     G: 'R4',
     H: 'R5',
-    I: 'Fw',
-    J: 'FL',
-    K: 'Rw',
-    L: 'Rd',
-    M: 'RL',
-    N: 'R',
+    I: 'Win',
+    J: 'Loss',
+    K: 'Win',
+    L: 'Draw',
+    M: 'Loss',
+    N: 'Ratio',
     O: 'Active',
     P: 'Grounded',
-    Q: 'A/G dif',
-    R: 'YK',
-    S: 'RK'
+    Q: 'Ratio',
+    R: 'Yellow Card',
+    S: 'Red Card'
   }
 
   Object.entries(headerRowValues2).forEach(([col, value]) => {
@@ -80,6 +95,20 @@ const generatePoolsSheet = (workbook, { teams }) => {
     cell.value = value
     cell.font = headerFont
     cell.alignment = wrapAlignmentValue
+  })
+
+  // format
+  poolsSheet.columns.forEach(column => {
+    let maxLength = 0
+
+    column.eachCell({ includeEmpty: true }, cell => {
+      let cellLength = (cell.value && cell.value.toString().length) || 0
+      cellLength += 2
+      if (cellLength > maxLength) {
+        maxLength = cellLength
+      }
+    })
+    column.width = maxLength
   })
 }
 
