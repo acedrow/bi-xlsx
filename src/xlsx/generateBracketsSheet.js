@@ -1,14 +1,47 @@
 // TODO: Linden: review this file
 import { RESULTS_COLS, getFont } from './sheetConstants.js'
 
-// sheet 3 Brackets
-const generateBracketsSheet = (workbook) => {
+// adding all teams to to the bracket
+const addTeamsToBracketSheet = (bracketsSheet, teams) => {
+  teams.forEach((team, index) => {
+    const rowIndex = 3 + index
+    // commented out the team + id (maybe we will use it maybe not)
+    const addedRow = bracketsSheet.insertRow(rowIndex /*, {
+      // B: team.id,
+      // C: team.name
+    } */)
+    addedRow.font = getFont(11, false)
+    // Merge cells from the second team
+    if (index % 2 === 1) {
+      const startRow = rowIndex - 1
+      const endRow = rowIndex
+      bracketsSheet.mergeCells(`A${startRow}:A${endRow}`)
+    }
+  })
+
+  // Check if uneven, yes => add and merge one more row
+  if (teams.length % 2 === 1) {
+    const lastRowIndex = 3 + teams.length
+    bracketsSheet.insertRow(lastRowIndex, {
+      B: null,
+      C: null
+    })
+    // Merge this empty row with the second to last row
+    const startRow = lastRowIndex - 1
+    const endRow = lastRowIndex
+    bracketsSheet.mergeCells(`A${startRow}:A${endRow}`)
+  }
+}
+
+const generateBracketsSheet = (workbook, { teams }) => {
   const headerFont = getFont(11, true)
   const wrapAlignmentTitle = { vertical: 'middle', horizontal: 'center', wrapText: true }
   const wrapAlignmentValue = { vertical: 'middle', horizontal: 'center', wrapText: false }
   const bracketsSheet = workbook.addWorksheet('Brackets')
 
   bracketsSheet.columns = RESULTS_COLS
+
+  addTeamsToBracketSheet(bracketsSheet, teams)
 
   // Merge cells for the header
   bracketsSheet.mergeCells('A1:A2')
@@ -45,15 +78,15 @@ const generateBracketsSheet = (workbook) => {
     F: 'R3',
     G: 'R4',
     H: 'R5',
-    I: 'FW',
-    J: 'FL',
+    I: 'Win',
+    J: 'Loss',
     K: 'Win',
     L: 'Draw',
     M: 'Loss',
-    N: 'Round Neutral',
-    O: 'Standing',
-    P: 'Ground',
-    Q: 'Stand/Ground Diff',
+    N: 'Ratio',
+    O: 'Active',
+    P: 'Grounded',
+    Q: 'Ratio',
     R: 'Yellow Card',
     S: 'Red Card'
   }
@@ -67,13 +100,9 @@ const generateBracketsSheet = (workbook) => {
   bracketsSheet.columns.forEach(column => {
     let maxLength = 0
 
-    // Loop through all cells in a column
     column.eachCell({ includeEmpty: true }, cell => {
-      // Calculate the maximum length of cell value
       const cellValue = cell.value
       let cellLength = (cellValue && cellValue.toString().length) || 0
-
-      // Add extra space for aesthetics
       cellLength += 2
       if (cellLength > maxLength) {
         maxLength = cellLength
