@@ -10,6 +10,9 @@ const BRACKETS_TEAM_ROW_START = 3
 // how many 'fight rows' to pre-populate:
 const NUMBER_FIGHTS_POOLS = 120
 
+const TOURNAMENT_TYPE_TEAMS = 'teams'
+const TOURNAMENT_TYPE_FIGHTERS = 'fighters'
+
 const COL_SIZE = {
   xs: 3.5,
   s: 6,
@@ -74,6 +77,25 @@ const EVENT_TIERS = [
 const FINALS_TYPE = [
   'Round Robin', 'Bracket'
 ]
+
+const TEST_DATA = {
+  eventName: 'test event',
+  date: '1/2/3',
+  location: 'St. Paul',
+  tournamentType: 'teams',
+  teams: [
+    { name: 'wyverns', id: 'tha best' },
+    { name: 'dfc', id: 'tha' },
+    { name: 'knyaz', id: 'big boiz' }
+  ],
+  fighters: [
+    { name: 'Derek', id: 'doc' },
+    { name: 'Keegan', id: 'too big' },
+    { name: 'Linden', id: 'lich boi' },
+    { name: 'Vish', id: '420' },
+    { name: 'Spence', id: 'coach' }
+  ]
+}
 export {
   RESULTS_COLS,
   TITLE_ROW_PROPS,
@@ -83,5 +105,8 @@ export {
   RESULTS_TEAM_ROW_START,
   POOLS_TEAM_ROW_START,
   BRACKETS_TEAM_ROW_START,
-  NUMBER_FIGHTS_POOLS
+  NUMBER_FIGHTS_POOLS,
+  TOURNAMENT_TYPE_TEAMS,
+  TOURNAMENT_TYPE_FIGHTERS,
+  TEST_DATA
 }

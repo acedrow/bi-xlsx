@@ -3,25 +3,8 @@ import tempfile from 'tempfile'
 import express from 'express'
 import cors from 'cors'
 import generateXlsx from './xlsx/index.js'
-
-const TEST_DATA = {
-  eventName: 'test event',
-  date: '1/2/3',
-  location: 'St. Paul',
-  tournamentType: 'teams',
-  teams: [
-    { name: 'wyverns', id: 'tha best' },
-    { name: 'dfc', id: 'tha' },
-    { name: 'knyaz', id: 'big boiz' }
-  ],
-  duellists: [
-    { name: 'Derek', id: 'doc' },
-    { name: 'Keegan', id: 'too big' },
-    { name: 'Linden', id: 'lich boi' },
-    { name: 'Vish', id: '420' },
-    { name: 'Spence', id: 'coach' }
-  ]
-}
+import { TEST_DATA, TOURNAMENT_TYPE_FIGHTERS, TOURNAMENT_TYPE_TEAMS } from './xlsx/sheetConstants.js'
+import { validate, ValidationError, Joi } from 'express-validation'
 
 const port = process.env.PORT || 8080
 
@@ -35,7 +18,23 @@ const corsOptions = {
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
-app.post('/generateSpreadsheet', cors(corsOptions), (req, res) => {
+// validation schema for /generateSpreadsheet
+const generationValidation = {
+  body: Joi.object({
+    eventName: Joi.string()
+      .required(),
+    date: Joi.string()
+      .required(),
+    location: Joi.string()
+      .required(),
+    tournamentType: Joi.string()
+      .valid(TOURNAMENT_TYPE_FIGHTERS, TOURNAMENT_TYPE_TEAMS).required(),
+    teams: Joi.array().items(
+      Joi.object({ name: Joi.string().required() }).unknown(true))
+  })
+}
+
+app.post('/generateSpreadsheet', [cors(corsOptions), validate(generationValidation, {}, {})], (req, res) => {
   console.log('post request', req.body)
   const workbook = generateXlsx(req.body)
   res.statusCode = 200
@@ -59,6 +58,15 @@ app.get('/', (req, res) => {
 app.post('/echoBody', cors(corsOptions), (req, res) => {
   console.log('post request', req.body)
   res.json({ requestBody: req.body })
+})
+
+// validation error handling
+app.use(function (err, req, res, next) {
+  if (err instanceof ValidationError) {
+    return res.status(err.statusCode).json(err)
+  }
+
+  return res.status(500).json(err)
 })
 
 app.listen(port, () => {

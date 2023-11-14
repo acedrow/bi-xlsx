@@ -1,4 +1,4 @@
-import { RESULTS_COLS, RESULTS_TEAM_ROW_START, TITLE_ROW_PROPS, getFont } from './sheetConstants.js'
+import { RESULTS_COLS, RESULTS_TEAM_ROW_START, TITLE_ROW_PROPS, TOURNAMENT_TYPE_TEAMS, getFont } from './sheetConstants.js'
 // sheet 1 Results
 const generateTitleRows = (worksheet) => {
 // ROW 1
@@ -58,13 +58,13 @@ const generateHeaderRows = (worksheet, eventName, date, location) => {
   worksheet.mergeCells('W4:X4')
 }
 
-const generateTeamHeaders = (worksheet) => {
+const generateTeamHeaders = (worksheet, tournamentType) => {
   const headerFont = getFont(11, true)
   const wrapAlignment = { vertical: 'middle', horizontal: 'center', wrapText: false }
   // Add headers for row 5 with common font and alignment
   const row5 = worksheet.addRow({
-    A: 'ID',
-    B: 'Team',
+    A: 'No.',
+    B: tournamentType === TOURNAMENT_TYPE_TEAMS ? 'Team' : 'Fighter',
     C: 'T',
     D: 'Fights',
     I: 'Rounds',
@@ -129,7 +129,7 @@ const generateTeamDataRows = (worksheet, teams) => {
   teams.forEach((team, index) => {
     const rowIndex = index + RESULTS_TEAM_ROW_START
     const addedRow = worksheet.addRow({
-      A: team.id,
+      A: index,
       B: team.name,
       C: 1,
       D: { formula: `=SUMIF(pools!$B:$B,$A${rowIndex},pools!$I:$I)+SUMIF(brackets!$B:$B,$A${rowIndex},brackets!$I:$I)` },
@@ -161,12 +161,12 @@ const generateTeamDataRows = (worksheet, teams) => {
   )
 }
 
-const generateResultsSheet = (workbook, { eventName, date, location, teams }) => {
+const generateResultsSheet = (workbook, { eventName, date, location, teams, tournamentType }) => {
   const resultsSheet = workbook.addWorksheet('results')
   resultsSheet.columns = RESULTS_COLS
   generateTitleRows(resultsSheet)
   generateHeaderRows(resultsSheet, eventName, date, location, teams)
-  generateTeamHeaders(resultsSheet)
+  generateTeamHeaders(resultsSheet, tournamentType)
   generateTeamDataRows(resultsSheet, teams)
 }
 
