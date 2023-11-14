@@ -1,4 +1,4 @@
-import { RESULTS_COLS, TITLE_ROW_PROPS, getFont } from './sheetConstants.js'
+import { RESULTS_COLS, RESULTS_TEAM_ROW_START, TITLE_ROW_PROPS, getFont } from './sheetConstants.js'
 // sheet 1 Results
 const generateTitleRows = (worksheet) => {
 // ROW 1
@@ -126,10 +126,35 @@ const generateTeamHeaders = (worksheet) => {
 
 // generates the team names + id
 const generateTeamDataRows = (worksheet, teams) => {
-  teams.forEach(team => {
+  teams.forEach((team, index) => {
+    const rowIndex = index + RESULTS_TEAM_ROW_START
     const addedRow = worksheet.addRow({
       A: team.id,
-      B: team.name
+      B: team.name,
+      C: 1,
+      D: { formula: `=SUMIF($pools.$B$1:$B$1048576;$A${rowIndex};$pools.$I$1:$I$1048576)+SUMIF($brackets.$B$1:$B$1048576;$A${rowIndex};$brackets.$I$1:$I$1048576)` },
+      E: { formula: `=SUMIF($pools.$B$1:$B$1048576;$A${rowIndex};$pools.$J$1:$J$1048576)+SUMIF($brackets.$B$1:$B$1048576;$A${rowIndex};$brackets.$J$1:$J$1048576)` },
+      F: { formula: `=SUM(D${rowIndex}:E${rowIndex})` },
+      G: { formula: `=iferror(D${rowIndex}/F${rowIndex})` },
+      H: { formula: `=F${rowIndex}/C${rowIndex}` },
+      I: { formula: `=SUMIF($pools.$B$1:$B$1048576;$A${rowIndex};$pools.$K$1:$K$1048576)+SUMIF($brackets.$B$1:$B$1048576;$A${rowIndex};$brackets.$K$1:$K$1048576)` },
+      J: { formula: `=SUMIF($pools.$B$1:$B$1048576;$A${rowIndex};$pools.$L$1:$L$1048576)+SUMIF($brackets.$B$1:$B$1048576;$A${rowIndex};$brackets.$L$1:$L$1048576)` },
+      K: { formula: `=SUMIF($pools.$B$1:$B$1048576;$A${rowIndex};$pools.$M$1:$M$1048576)+SUMIF($brackets.$B$1:$B$1048576;$A${rowIndex};$brackets.$M$1:$M$1048576)` },
+      L: { formula: `=SUM(I${rowIndex}:K${rowIndex})` },
+      M: { formula: `=iferror(I${rowIndex}/L${rowIndex})` },
+      N: { formula: `=SUMIF($pools.$B$1:$B$1048576;$A${rowIndex};$pools.$O$1:$O$1048576)+SUMIF($brackets.$B$1:$B$1048576;$A${rowIndex};$brackets.$O$1:$O$1048576)` },
+      O: { formula: `=iferror(N${rowIndex}/L${rowIndex})` },
+      P: { formula: `=SUMIF($pools.$B$1:$B$1048576;$A${rowIndex};$pools.$P$1:$P$1048576)+SUMIF($brackets.$B$1:$B$1048576;$A${rowIndex};$brackets.$P$1:$P$1048576)` },
+      Q: { formula: `=iferror(P${rowIndex}/L${rowIndex})` },
+      R: { formula: `=N${rowIndex}-P${rowIndex}` },
+      S: { formula: `=iferror(N${rowIndex}/(L${rowIndex}*5))` },
+      T: { formula: `=SUMIF($pools.$B$1:$B$1048576;$A${rowIndex};$pools.$R$1:$R$1048576)+SUMIF($brackets.$B$1:$B$1048576;$A${rowIndex};$brackets.$R$1:$R$1048576)` },
+      U: { formula: `=SUMIF($pools.$B$1:$B$1048576;$A${rowIndex};$pools.$S$1:$S$1048576)+SUMIF($brackets.$B$1:$B$1048576;$A${rowIndex};$brackets.$S$1:$S$1048576)` },
+      V: { formula: `=T${rowIndex}+(2*U${rowIndex})` },
+      W: { formula: `=SUMIF($pools.$B$1:$B$1048576;$A${rowIndex};$pools.$I$1:$I$1048576)+(SUMIF($brackets.$B$1:$B$1048576;$A${rowIndex};$brackets.$I$1:$I$1048576)*2)` },
+      X: { formula: `=IF($W$4="Round Robin";_xlfn.rank.eq(D${rowIndex};$D$7:$D$101)+COUNTIFS($D$7:$D$101;D${rowIndex};$M$7:$M$101;">"&M${rowIndex})+COUNTIFS($D$7:$D$101;D${rowIndex};$M$7:$M$101;M${rowIndex};$S$7:$S$101;">"&S${rowIndex})+COUNTIFS($D$7:$D$101;D${rowIndex};$M$7:$M$101;M${rowIndex};$S$7:$S$101;S${rowIndex};$V$7:$V$101;"<"&V${rowIndex});iferror(MATCH(A${rowIndex};$brackets.$X$2:$X$5;0);"NA"))` },
+      Y: { formula: `=IF(X${rowIndex}=3;W${rowIndex}+2;IF(X${rowIndex}=2;W${rowIndex}+4;IF(X${rowIndex}=1;W${rowIndex}+6;W${rowIndex})))` },
+      Z: { formula: `=Y${rowIndex}*$Z$4` }
     })
     addedRow.font = getFont(11, false)
   }
@@ -137,7 +162,7 @@ const generateTeamDataRows = (worksheet, teams) => {
 }
 
 const generateResultsSheet = (workbook, { eventName, date, location, teams }) => {
-  const resultsSheet = workbook.addWorksheet('Results')
+  const resultsSheet = workbook.addWorksheet('results')
   resultsSheet.columns = RESULTS_COLS
   generateTitleRows(resultsSheet)
   generateHeaderRows(resultsSheet, eventName, date, location, teams)

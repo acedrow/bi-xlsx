@@ -1,35 +1,36 @@
 // TODO: Linden: review this file
-import { RESULTS_COLS, getFont } from './sheetConstants.js'
+import { NUMBER_FIGHTS_POOLS, POOLS_TEAM_ROW_START, RESULTS_COLS, getFont } from './sheetConstants.js'
 
 // adding all teams to to the pools
 const addTeamsToPoolsSheet = (poolsSheet, teams) => {
-  teams.forEach((team, index) => {
-    const rowIndex = 3 + index
-    // commented out the team + id (maybe we will use it maybe not)
-    const addedRow = poolsSheet.insertRow(rowIndex /*, {
-      // B: team.id,
-      // C: team.name
-    } */)
+  for (let i = 0; i < NUMBER_FIGHTS_POOLS; i++) {
+    const rowIndex = POOLS_TEAM_ROW_START + i
+    const myIndex = rowIndex
+    const oppIndex = (rowIndex % 2) === 0 ? rowIndex - 1 : rowIndex + 1
+    console.log('i', i, 'rowIndex', rowIndex, 'myIndex', myIndex, 'oppIndex', oppIndex, 'oppIndex % 2', oppIndex % 2)
+    const addedRow = poolsSheet.insertRow(rowIndex, {
+      A: (i / 2),
+      B: '',
+      C: '',
+      I: { formula: `=IF(K${myIndex}>K${oppIndex},1,0)` },
+      J: { formula: `=IF(I${myIndex}=0,1,0)` },
+      K: { formula: `=IF(D${myIndex}>D${oppIndex},1,0)+IF(E${myIndex}>E${oppIndex},1,0)+IF(F${myIndex}>F${oppIndex},1,0)+IF(G${myIndex}>G${oppIndex},1,0)+IF(H${myIndex}>H${oppIndex},1,0)` },
+      L: { formula: `=N${myIndex}-K${myIndex}-M${myIndex}` },
+      M: { formula: `=K${oppIndex}` },
+      N: { formula: `=IF(ISBLANK(D${myIndex}),0,1)+IF(ISBLANK(E${myIndex}),0,1)+IF(ISBLA  NK(F${myIndex}),0,1)+IF(ISBLANK(G${myIndex}),0,1)+IF(ISBLANK(H${myIndex}),0,1)` },
+      O: { formula: `=SUM(D${myIndex}:H${myIndex})` },
+      P: { formula: `=SUM(D${oppIndex}:H${oppIndex})` },
+      Q: { formula: `=O${myIndex}-P${myIndex}` }
+    })
     addedRow.font = getFont(11, false)
+    addedRow.getCell('A').font = getFont(11, true)
+
     // Merge cells from the second team
-    if (index % 2 === 1) {
+    if (i % 2 === 1) {
       const startRow = rowIndex - 1
       const endRow = rowIndex
       poolsSheet.mergeCells(`A${startRow}:A${endRow}`)
     }
-  })
-
-  // Check if uneven, yes => add and merge one more row
-  if (teams.length % 2 === 1) {
-    const lastRowIndex = 3 + teams.length
-    poolsSheet.insertRow(lastRowIndex, {
-      B: null,
-      C: null
-    })
-    // Merge this empty row with the second to last row
-    const startRow = lastRowIndex - 1
-    const endRow = lastRowIndex
-    poolsSheet.mergeCells(`A${startRow}:A${endRow}`)
   }
 }
 
@@ -37,7 +38,7 @@ const generatePoolsSheet = (workbook, { teams }) => {
   const headerFont = getFont(11, true)
   const wrapAlignmentTitle = { vertical: 'middle', horizontal: 'center', wrapText: true }
   const wrapAlignmentValue = { vertical: 'middle', horizontal: 'center', wrapText: false }
-  const poolsSheet = workbook.addWorksheet('Pools')
+  const poolsSheet = workbook.addWorksheet('pools')
   poolsSheet.columns = RESULTS_COLS
 
   addTeamsToPoolsSheet(poolsSheet, teams)

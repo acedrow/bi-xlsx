@@ -1,4 +1,3 @@
-// TODO: Linden: review this file
 import { RESULTS_COLS, getFont } from './sheetConstants.js'
 
 // adding all teams to to the bracket
@@ -37,7 +36,7 @@ const generateBracketsSheet = (workbook, { teams }) => {
   const headerFont = getFont(11, true)
   const wrapAlignmentTitle = { vertical: 'middle', horizontal: 'center', wrapText: true }
   const wrapAlignmentValue = { vertical: 'middle', horizontal: 'center', wrapText: false }
-  const bracketsSheet = workbook.addWorksheet('Brackets')
+  const bracketsSheet = workbook.addWorksheet('brackets')
 
   bracketsSheet.columns = RESULTS_COLS
 

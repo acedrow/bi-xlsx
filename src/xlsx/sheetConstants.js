@@ -1,5 +1,15 @@
 const TITLE_ROW_BACKGROUND_COLOR_ARGB = 'ffabcb95'
 
+// the first row on the results sheet that we show data:
+const RESULTS_TEAM_ROW_START = 7
+// the first row on the pools sheet that we show data:
+const POOLS_TEAM_ROW_START = 3
+// the first row on the brackets sheet that we show data:
+const BRACKETS_TEAM_ROW_START = 3
+
+// how many 'fight rows' to pre-populate:
+const NUMBER_FIGHTS_POOLS = 120
+
 const COL_SIZE = {
   xs: 3.5,
   s: 6,
@@ -64,4 +74,14 @@ const EVENT_TIERS = [
 const FINALS_TYPE = [
   'Round Robin', 'Bracket'
 ]
-export { RESULTS_COLS, TITLE_ROW_PROPS, getFont, EVENT_TIERS, FINALS_TYPE }
+export {
+  RESULTS_COLS,
+  TITLE_ROW_PROPS,
+  getFont,
+  EVENT_TIERS,
+  FINALS_TYPE,
+  RESULTS_TEAM_ROW_START,
+  POOLS_TEAM_ROW_START,
+  BRACKETS_TEAM_ROW_START,
+  NUMBER_FIGHTS_POOLS
+}
