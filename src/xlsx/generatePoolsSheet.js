@@ -16,7 +16,7 @@ const addTeamsToPoolsSheet = (poolsSheet, teams) => {
       K: { formula: `=IF(D${myIndex}>D${oppIndex},1,0)+IF(E${myIndex}>E${oppIndex},1,0)+IF(F${myIndex}>F${oppIndex},1,0)+IF(G${myIndex}>G${oppIndex},1,0)+IF(H${myIndex}>H${oppIndex},1,0)` },
       L: { formula: `=N${myIndex}-K${myIndex}-M${myIndex}` },
       M: { formula: `=K${oppIndex}` },
-      N: { formula: `=IF(ISBLANK(D${myIndex}),0,1)+IF(ISBLANK(E${myIndex}),0,1)+IF(ISBLA  NK(F${myIndex}),0,1)+IF(ISBLANK(G${myIndex}),0,1)+IF(ISBLANK(H${myIndex}),0,1)` },
+      N: { formula: `=IF(ISBLANK(D${myIndex}),0,1)+IF(ISBLANK(E${myIndex}),0,1)+IF(ISBLANK(F${myIndex}),0,1)+IF(ISBLANK(G${myIndex}),0,1)+IF(ISBLANK(H${myIndex}),0,1)` },
       O: { formula: `=SUM(D${myIndex}:H${myIndex})` },
       P: { formula: `=SUM(D${oppIndex}:H${oppIndex})` },
       Q: { formula: `=O${myIndex}-P${myIndex}` }
