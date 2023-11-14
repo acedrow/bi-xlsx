@@ -31,7 +31,7 @@ app.use(cors())
 app.use(express.json()) // <==== parse request body as JSON
 
 const corsOptions = {
-  origin: 'https://www.buhurtinternational.com/',
+  origin: 'https://www.buhurtinternational.com',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
@@ -39,6 +39,7 @@ app.post('/generateSpreadsheet', cors(corsOptions), (req, res) => {
   console.log('post request', req.body)
   const workbook = generateXlsx(req.body)
   res.statusCode = 200
+  res.set('Access-Control-Allow-Origin', 'https://www.buhurtinternational.com')
   const tempFilePath = tempfile({ extension: '.xlsx' })
   workbook.xlsx.writeFile(tempFilePath).then(function () {
     res.download(tempFilePath, 'test.xlsx')
