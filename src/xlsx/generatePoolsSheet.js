@@ -7,7 +7,6 @@ const addTeamsToPoolsSheet = (poolsSheet, teams) => {
     const rowIndex = POOLS_TEAM_ROW_START + i
     const myIndex = rowIndex
     const oppIndex = (rowIndex % 2) === 0 ? rowIndex - 1 : rowIndex + 1
-    console.log('i', i, 'rowIndex', rowIndex, 'myIndex', myIndex, 'oppIndex', oppIndex, 'oppIndex % 2', oppIndex % 2)
     const addedRow = poolsSheet.insertRow(rowIndex, {
       A: (i / 2),
       B: '',
