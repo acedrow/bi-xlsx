@@ -7,8 +7,8 @@ const generateXlsx = ({ eventName, date, location, teams, fighters, tournamentTy
   const workbook = new ExcelJS.Workbook()
   const competitors = teams || fighters
   generateResultsSheet(workbook, { eventName, date, location, teams: competitors, tournamentType })
-  generatePoolsSheet(workbook, { eventName, date, location, teams: competitors, tournamentType })
-  generateBracketsSheet(workbook, { eventName, date, location, teams: competitors, tournamentType })
+  // generatePoolsSheet(workbook, { eventName, date, location, teams: competitors, tournamentType })
+  // generateBracketsSheet(workbook, { eventName, date, location, teams: competitors, tournamentType })
   return workbook
 }
 

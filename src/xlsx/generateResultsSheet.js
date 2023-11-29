@@ -143,7 +143,7 @@ const generateTeamDataRows = (worksheet, teams) => {
       L: { formula: `=SUM(I${rowIndex}:K${rowIndex})` },
       M: { formula: `=IFERROR(I${rowIndex}/L${rowIndex}, 0)` },
       N: { formula: `=SUMIF(pools!$B:$B,$A${rowIndex},pools!$O:$O)+SUMIF(brackets!$B:$B,$A${rowIndex},brackets!$O:$O)` },
-      O: { formula: `=IFERROR(N${rowIndex}/L${rowIndex})` },
+      O: { formula: `=IFERROR(N${rowIndex}/L${rowIndex}, 0)` },
       P: { formula: `=SUMIF(pools!$B:$B,$A${rowIndex},pools!$P:$P)+SUMIF(brackets!$B:$B,$A${rowIndex},brackets!$P:$P)` },
       Q: { formula: `=IFERROR(P${rowIndex}/L${rowIndex}, 0)` },
       R: { formula: `=N${rowIndex}-P${rowIndex}` },
@@ -153,7 +153,7 @@ const generateTeamDataRows = (worksheet, teams) => {
       V: { formula: `=T${rowIndex}+(2*U${rowIndex})` },
       W: { formula: `=SUMIF(pools!$B:$B,$A${rowIndex},pools!$I:$I)+(SUMIF(brackets!$B:$B,$A${rowIndex},brackets!$I:$I)*2)` },
       X: { formula: `=IF($W$4="Round Robin",RANK.EQ(D${rowIndex},$D$7:$D$100)+COUNTIFS($D$7:$D$100,D${rowIndex},$M$7:$M$100,">"&M${rowIndex})+COUNTIFS($D$7:$D$100,D${rowIndex},$M$7:$M$100,M${rowIndex},$S$7:$S$100,">"&S${rowIndex})+COUNTIFS($D$7:$D$100,D${rowIndex},$M$7:$M$100,M${rowIndex},$S$7:$S$100,S${rowIndex},$V$7:$V$100,"<"&V${rowIndex}),IFERROR(MATCH(A${rowIndex},brackets!$X$2:$X$5,0),"NA"))` },
-      Y: { formula: `=IF(X${rowIndex}=3;W${rowIndex}+2;IF(X${rowIndex}=2;W${rowIndex}+4;IF(X${rowIndex}=1;W${rowIndex}+6;W${rowIndex})))` },
+      Y: { formula: `=IF(X${rowIndex}=3,W${rowIndex}+2,IF(X${rowIndex}=2,W${rowIndex}+4,IF(X${rowIndex}=1,W${rowIndex}+6,W${rowIndex})))` },
       Z: { formula: `=Y${rowIndex}*$Z$4` }
     })
     addedRow.font = getFont(11, false)
