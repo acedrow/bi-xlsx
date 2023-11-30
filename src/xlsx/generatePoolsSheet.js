@@ -8,7 +8,7 @@ const addTeamsToPoolsSheet = (poolsSheet, teams) => {
     const myIndex = rowIndex
     const oppIndex = (rowIndex % 2) === 0 ? rowIndex - 1 : rowIndex + 1
     const addedRow = poolsSheet.insertRow(rowIndex, {
-      A: (i / 2),
+      A: Math.floor(i / 2) + 1,
       B: '',
       C: '',
       I: { formula: `=IF(K${myIndex}>K${oppIndex},1,0)` },
@@ -19,8 +19,12 @@ const addTeamsToPoolsSheet = (poolsSheet, teams) => {
       N: { formula: `=IF(ISBLANK(D${myIndex}),0,1)+IF(ISBLANK(E${myIndex}),0,1)+IF(ISBLANK(F${myIndex}),0,1)+IF(ISBLANK(G${myIndex}),0,1)+IF(ISBLANK(H${myIndex}),0,1)` },
       O: { formula: `=SUM(D${myIndex}:H${myIndex})` },
       P: { formula: `=SUM(D${oppIndex}:H${oppIndex})` },
-      Q: { formula: `=O${myIndex}-P${myIndex}` }
+      Q: { formula: `=O${myIndex}-P${myIndex}` },
+      R: '',
+      S: ''
     })
+
+    // Set font styles
     addedRow.font = getFont(11, false)
     addedRow.getCell('A').font = getFont(11, true)
 
@@ -29,6 +33,41 @@ const addTeamsToPoolsSheet = (poolsSheet, teams) => {
       const startRow = rowIndex - 1
       const endRow = rowIndex
       poolsSheet.mergeCells(`A${startRow}:A${endRow}`)
+
+      // Set background color for both rows
+      const backgroundColor = i % 4 === 1 ? { argb: 'F2F3F4' } : { argb: 'FFFFFFFF' }
+      addedRow.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: backgroundColor
+      }
+
+      // Set background color for the row above
+      const aboveRow = poolsSheet.getRow(startRow)
+      aboveRow.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: backgroundColor
+      }
+
+      // Set borders for both rows
+      addedRow.eachCell({ includeEmpty: true }, cell => {
+        cell.border = {
+          top: { style: 'thin' },
+          left: { style: 'thin' },
+          bottom: { style: 'thin' },
+          right: { style: 'thin' }
+        }
+      })
+
+      aboveRow.eachCell({ includeEmpty: true }, cell => {
+        cell.border = {
+          top: { style: 'thin' },
+          left: { style: 'thin' },
+          bottom: { style: 'thin' },
+          right: { style: 'thin' }
+        }
+      })
     }
   }
 }
@@ -54,13 +93,13 @@ const generatePoolsSheet = (workbook, { teams }) => {
 
   const headerRowValues = {
     A: 'Fight',
-    B: 'Team/Fighter ID',
+    B: 'ID#',
     C: 'Team',
     D: 'Rounds Score',
-    I: 'Fight',
+    I: 'Matches',
     K: 'Rounds',
     O: 'Active/Grounded',
-    R: 'Penalties'
+    R: 'Cards'
   }
 
   Object.entries(headerRowValues).forEach(([col, value]) => {
@@ -86,8 +125,8 @@ const generatePoolsSheet = (workbook, { teams }) => {
     O: 'Active',
     P: 'Grounded',
     Q: 'Ratio',
-    R: 'Yellow Card',
-    S: 'Red Card'
+    R: 'Yellow',
+    S: 'Red'
   }
 
   Object.entries(headerRowValues2).forEach(([col, value]) => {

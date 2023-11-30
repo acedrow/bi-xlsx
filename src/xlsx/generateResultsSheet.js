@@ -63,10 +63,10 @@ const generateTeamHeaders = (worksheet, tournamentType) => {
   const wrapAlignment = { vertical: 'middle', horizontal: 'center', wrapText: false }
   // Add headers for row 5 with common font and alignment
   const row5 = worksheet.addRow({
-    A: 'No.',
+    A: 'ID#',
     B: tournamentType === TOURNAMENT_TYPE_TEAMS ? 'Team' : 'Fighter',
     C: 'T',
-    D: 'Fights',
+    D: 'Matches',
     I: 'Rounds',
     N: 'Score',
     T: 'Cards',
@@ -122,6 +122,7 @@ const generateTeamHeaders = (worksheet, tournamentType) => {
   worksheet.mergeCells('T5:V5')
 
   worksheet.getColumn('H').hidden = true
+  worksheet.getColumn('C').hidden = true
 }
 
 // generates the team names + id
