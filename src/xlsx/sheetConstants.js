@@ -17,7 +17,7 @@ const COL_SIZE = {
   xs: 3.5,
   s: 6,
   m: 10,
-  l: 13,
+  l: 15,
   xl: 21
 }
 

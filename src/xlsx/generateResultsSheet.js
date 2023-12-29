@@ -28,6 +28,11 @@ const generateHeaderRows = (worksheet, eventName, date, location) => {
     Z: 'Classic'
   })
 
+  row3.getCell('T').alignment = { vertical: 'middle', horizontal: 'center', wrapText: true }
+  row3.getCell('W').alignment = { vertical: 'middle', horizontal: 'center', wrapText: true }
+  row3.getCell('Y').alignment = { vertical: 'middle', horizontal: 'center', wrapText: true }
+  row3.getCell('Z').alignment = { vertical: 'middle', horizontal: 'center', wrapText: true }
+
   row3.font = getFont(11, true)
   worksheet.getCell('Z3').dataValidation = {
     type: 'list',
@@ -47,6 +52,11 @@ const generateHeaderRows = (worksheet, eventName, date, location) => {
     Z: { formula: '=IF(Z3="Regional",1.5,IF(Z3="Conference",2,1))' }
   })
 
+  row4.getCell('T').alignment = { vertical: 'middle', horizontal: 'center', wrapText: true }
+  row4.getCell('W').alignment = { vertical: 'middle', horizontal: 'center', wrapText: true }
+  row4.getCell('Y').alignment = { vertical: 'middle', horizontal: 'center', wrapText: true }
+  row4.getCell('Z').alignment = { vertical: 'middle', horizontal: 'center', wrapText: true }
+
   row4.font = getFont(11, true)
   worksheet.getCell('W4').dataValidation = {
     type: 'list',
@@ -60,16 +70,18 @@ const generateHeaderRows = (worksheet, eventName, date, location) => {
 
 const generateTeamHeaders = (worksheet, tournamentType) => {
   const headerFont = getFont(11, true)
+  const subHeaderFont = getFont(10, false)
+
   const wrapAlignment = { vertical: 'middle', horizontal: 'center', wrapText: false }
   // Add headers for row 5 with common font and alignment
   const row5 = worksheet.addRow({
-    A: 'ID#',
+    A: 'Team/Fighter ID',
     B: tournamentType === TOURNAMENT_TYPE_TEAMS ? 'Team' : 'Fighter',
     C: 'T',
-    D: 'Matches',
+    D: 'Fights',
     I: 'Rounds',
-    N: 'Score',
-    T: 'Cards',
+    N: 'Active/Grounded',
+    T: 'Penalites',
     W: 'Points',
     X: 'Placement',
     Y: 'Rank adj. Points',
@@ -82,31 +94,31 @@ const generateTeamHeaders = (worksheet, tournamentType) => {
   // Add headers for row 6 and styles
   const row6 = worksheet.addRow({
     // Fights
-    D: 'Won',
-    E: 'Loss',
-    F: 'Total',
-    G: 'Win Ratio',
-    // H: '', // will not be used but keep it ?
+    D: 'Fw',
+    E: 'Fl',
+    F: 'Ff',
+    G: 'Fw/F',
+    H: 'F/T',
     // Rounds
-    I: 'Win',
-    J: 'Draw',
-    K: 'Loss',
-    L: 'Total',
-    M: 'win ratio',
+    I: 'Rw',
+    J: 'Rd',
+    K: 'Rl',
+    L: 'Rf',
+    M: 'Rw/R',
     // Active/Grounded
-    N: 'Active',
-    O: 'per round',
-    P: 'Grounded',
-    Q: 'per round',
-    R: 'A/G difference', // active versus ground difference
-    S: 'A/G Ratio', // active ground ratio read "kill/death Ratio"
+    N: 'A',
+    O: 'A/R',
+    P: 'G',
+    Q: 'G/R',
+    R: 'A/G D', // active versus ground difference
+    S: 'A/G R', // active ground ratio read "kill/death Ratio"
     // penaties
-    T: 'Yellow',
-    U: 'Red',
+    T: 'YK',
+    U: 'RK',
     V: 'Total'
   })
 
-  row6.font = headerFont
+  row6.font = subHeaderFont
   row6.alignment = wrapAlignment
 
   worksheet.mergeCells('A5:A6')

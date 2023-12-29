@@ -93,13 +93,13 @@ const generatePoolsSheet = (workbook, { teams }) => {
 
   const headerRowValues = {
     A: 'Fight',
-    B: 'ID#',
+    B: 'Team/Fighter ID',
     C: 'Team',
     D: 'Rounds Score',
     I: 'Matches',
     K: 'Rounds',
     O: 'Active/Grounded',
-    R: 'Cards'
+    R: 'Penalites'
   }
 
   Object.entries(headerRowValues).forEach(([col, value]) => {
