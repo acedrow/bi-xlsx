@@ -1,5 +1,4 @@
-// TODO: Linden: review this file
-import { NUMBER_FIGHTS_POOLS, POOLS_TEAM_ROW_START, RESULTS_COLS, getFont } from './sheetConstants.js'
+import { NUMBER_FIGHTS_POOLS, POOLS_BRACKETS_COLS, POOLS_TEAM_ROW_START, POOL_BRACKET_HEADER_VALUES, POOL_BRACKET_SUB_HEADER_VALUES, getFont } from './sheetConstants.js'
 
 // adding all teams to to the pools
 const addTeamsToPoolsSheet = (poolsSheet, teams) => {
@@ -77,7 +76,7 @@ const generatePoolsSheet = (workbook, { teams }) => {
   const wrapAlignmentTitle = { vertical: 'middle', horizontal: 'center', wrapText: true }
   const wrapAlignmentValue = { vertical: 'middle', horizontal: 'center', wrapText: false }
   const poolsSheet = workbook.addWorksheet('pools')
-  poolsSheet.columns = RESULTS_COLS
+  poolsSheet.columns = POOLS_BRACKETS_COLS
 
   addTeamsToPoolsSheet(poolsSheet, teams)
 
@@ -91,63 +90,18 @@ const generatePoolsSheet = (workbook, { teams }) => {
   poolsSheet.mergeCells('O1:Q1')
   poolsSheet.mergeCells('R1:S1')
 
-  const headerRowValues = {
-    A: 'Fight',
-    B: 'Team/Fighter ID',
-    C: 'Team',
-    D: 'Rounds Score',
-    I: 'Matches',
-    K: 'Rounds',
-    O: 'Active/Grounded',
-    R: 'Penalites'
-  }
-
-  Object.entries(headerRowValues).forEach(([col, value]) => {
+  Object.entries(POOL_BRACKET_HEADER_VALUES).forEach(([col, value]) => {
     const cell = poolsSheet.getCell(`${col}1`)
     cell.value = value
     cell.font = headerFont
     cell.alignment = wrapAlignmentTitle
   })
 
-  // Set the header values for the second row
-  const headerRowValues2 = {
-    D: 'R1',
-    E: 'R2',
-    F: 'R3',
-    G: 'R4',
-    H: 'R5',
-    I: 'Win',
-    J: 'Loss',
-    K: 'Win',
-    L: 'Draw',
-    M: 'Loss',
-    N: 'Ratio',
-    O: 'Active',
-    P: 'Grounded',
-    Q: 'Ratio',
-    R: 'Yellow',
-    S: 'Red'
-  }
-
-  Object.entries(headerRowValues2).forEach(([col, value]) => {
+  Object.entries(POOL_BRACKET_SUB_HEADER_VALUES).forEach(([col, value]) => {
     const cell = poolsSheet.getCell(`${col}2`)
     cell.value = value
     cell.font = headerFont
     cell.alignment = wrapAlignmentValue
-  })
-
-  // format
-  poolsSheet.columns.forEach(column => {
-    let maxLength = 0
-
-    column.eachCell({ includeEmpty: true }, cell => {
-      let cellLength = (cell.value && cell.value.toString().length) || 0
-      cellLength += 2
-      if (cellLength > maxLength) {
-        maxLength = cellLength
-      }
-    })
-    column.width = maxLength
   })
 }
 

@@ -1,4 +1,4 @@
-import { RESULTS_COLS, getFont } from './sheetConstants.js'
+import { POOLS_BRACKETS_COLS, POOL_BRACKET_HEADER_VALUES, getFont } from './sheetConstants.js'
 
 // adding all teams to to the bracket
 const addTeamsToBracketSheet = (bracketsSheet, teams) => {
@@ -38,7 +38,7 @@ const generateBracketsSheet = (workbook, { teams }) => {
   const wrapAlignmentValue = { vertical: 'middle', horizontal: 'center', wrapText: false }
   const bracketsSheet = workbook.addWorksheet('brackets')
 
-  bracketsSheet.columns = RESULTS_COLS
+  bracketsSheet.columns = POOLS_BRACKETS_COLS
 
   addTeamsToBracketSheet(bracketsSheet, teams)
 
@@ -52,18 +52,7 @@ const generateBracketsSheet = (workbook, { teams }) => {
   bracketsSheet.mergeCells('O1:Q1')
   bracketsSheet.mergeCells('R1:S1')
 
-  const headerRowValues = {
-    A: 'Fight',
-    B: 'Team/Fighter ID',
-    C: 'Team',
-    D: 'Rounds Score',
-    I: 'Fight',
-    K: 'Rounds',
-    O: 'Active/Grounded',
-    R: 'Penalties'
-  }
-
-  Object.entries(headerRowValues).forEach(([col, value]) => {
+  Object.entries(POOL_BRACKET_HEADER_VALUES).forEach(([col, value]) => {
     const cell = bracketsSheet.getCell(`${col}1`)
     cell.value = value
     cell.font = headerFont
