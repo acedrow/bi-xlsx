@@ -1,103 +1,108 @@
-import { POOLS_BRACKETS_COLS, POOL_BRACKET_HEADER_VALUES, getFont } from './sheetConstants.js'
+import { NUMBER_FIGHTS_POOLS, POOLS_BRACKETS_COLS, POOLS_TEAM_ROW_START, POOL_BRACKET_HEADER_VALUES, POOL_BRACKET_SUB_HEADER_VALUES, getFont } from './sheetConstants.js'
 
-// adding all teams to to the bracket
-const addTeamsToBracketSheet = (bracketsSheet, teams) => {
-  teams.forEach((team, index) => {
-    const rowIndex = 3 + index
-    // commented out the team + id (maybe we will use it maybe not)
-    const addedRow = bracketsSheet.insertRow(rowIndex /*, {
-      // B: team.id,
-      // C: team.name
-    } */)
+// adding all teams to to the pools
+const addTeamsToPoolsSheet = (poolsSheet, teams) => {
+  for (let i = 0; i < NUMBER_FIGHTS_POOLS; i++) {
+    const rowIndex = POOLS_TEAM_ROW_START + i
+    const myIndex = rowIndex
+    const oppIndex = (rowIndex % 2) === 0 ? rowIndex - 1 : rowIndex + 1
+    const addedRow = poolsSheet.insertRow(rowIndex, {
+      A: Math.floor(i / 2) + 1,
+      B: '',
+      C: '',
+      I: { formula: `=IF(K${myIndex}>K${oppIndex},1,0)` },
+      J: { formula: `=IF(I${myIndex}=0,1,0)` },
+      K: { formula: `=IF(D${myIndex}>D${oppIndex},1,0)+IF(E${myIndex}>E${oppIndex},1,0)+IF(F${myIndex}>F${oppIndex},1,0)+IF(G${myIndex}>G${oppIndex},1,0)+IF(H${myIndex}>H${oppIndex},1,0)` },
+      L: { formula: `=N${myIndex}-K${myIndex}-M${myIndex}` },
+      M: { formula: `=K${oppIndex}` },
+      N: { formula: `=IF(ISBLANK(D${myIndex}),0,1)+IF(ISBLANK(E${myIndex}),0,1)+IF(ISBLANK(F${myIndex}),0,1)+IF(ISBLANK(G${myIndex}),0,1)+IF(ISBLANK(H${myIndex}),0,1)` },
+      O: { formula: `=SUM(D${myIndex}:H${myIndex})` },
+      P: { formula: `=SUM(D${oppIndex}:H${oppIndex})` },
+      Q: { formula: `=O${myIndex}-P${myIndex}` },
+      R: '',
+      S: ''
+    })
+
+    // Set font styles
     addedRow.font = getFont(11, false)
+    addedRow.getCell('A').font = getFont(11, true)
+
     // Merge cells from the second team
-    if (index % 2 === 1) {
+    if (i % 2 === 1) {
       const startRow = rowIndex - 1
       const endRow = rowIndex
-      bracketsSheet.mergeCells(`A${startRow}:A${endRow}`)
-    }
-  })
+      poolsSheet.mergeCells(`A${startRow}:A${endRow}`)
 
-  // Check if uneven, yes => add and merge one more row
-  if (teams.length % 2 === 1) {
-    const lastRowIndex = 3 + teams.length
-    bracketsSheet.insertRow(lastRowIndex, {
-      B: null,
-      C: null
-    })
-    // Merge this empty row with the second to last row
-    const startRow = lastRowIndex - 1
-    const endRow = lastRowIndex
-    bracketsSheet.mergeCells(`A${startRow}:A${endRow}`)
+      // Set background color for both rows
+      const backgroundColor = i % 4 === 1 ? { argb: 'F2F3F4' } : { argb: 'FFFFFFFF' }
+      addedRow.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: backgroundColor
+      }
+
+      // Set background color for the row above
+      const aboveRow = poolsSheet.getRow(startRow)
+      aboveRow.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: backgroundColor
+      }
+
+      // Set borders for both rows
+      addedRow.eachCell({ includeEmpty: true }, cell => {
+        cell.border = {
+          top: { style: 'thin' },
+          left: { style: 'thin' },
+          bottom: { style: 'thin' },
+          right: { style: 'thin' }
+        }
+      })
+
+      aboveRow.eachCell({ includeEmpty: true }, cell => {
+        cell.border = {
+          top: { style: 'thin' },
+          left: { style: 'thin' },
+          bottom: { style: 'thin' },
+          right: { style: 'thin' }
+        }
+      })
+    }
   }
 }
 
-const generateBracketsSheet = (workbook, { teams }) => {
+const generatePoolsSheet = (workbook, { teams }) => {
   const headerFont = getFont(11, true)
   const wrapAlignmentTitle = { vertical: 'middle', horizontal: 'center', wrapText: true }
   const wrapAlignmentValue = { vertical: 'middle', horizontal: 'center', wrapText: false }
-  const bracketsSheet = workbook.addWorksheet('brackets')
+  const poolsSheet = workbook.addWorksheet('brackets')
+  poolsSheet.columns = POOLS_BRACKETS_COLS
 
-  bracketsSheet.columns = POOLS_BRACKETS_COLS
-
-  addTeamsToBracketSheet(bracketsSheet, teams)
+  addTeamsToPoolsSheet(poolsSheet, teams)
 
   // Merge cells for the header
-  bracketsSheet.mergeCells('A1:A2')
-  bracketsSheet.mergeCells('B1:B2')
-  bracketsSheet.mergeCells('C1:C2')
-  bracketsSheet.mergeCells('D1:H1')
-  bracketsSheet.mergeCells('I1:J1')
-  bracketsSheet.mergeCells('K1:N1')
-  bracketsSheet.mergeCells('O1:Q1')
-  bracketsSheet.mergeCells('R1:S1')
+  poolsSheet.mergeCells('A1:A2')
+  poolsSheet.mergeCells('B1:B2')
+  poolsSheet.mergeCells('C1:C2')
+  poolsSheet.mergeCells('D1:H1')
+  poolsSheet.mergeCells('I1:J1')
+  poolsSheet.mergeCells('K1:N1')
+  poolsSheet.mergeCells('O1:Q1')
+  poolsSheet.mergeCells('R1:S1')
 
   Object.entries(POOL_BRACKET_HEADER_VALUES).forEach(([col, value]) => {
-    const cell = bracketsSheet.getCell(`${col}1`)
+    const cell = poolsSheet.getCell(`${col}1`)
     cell.value = value
     cell.font = headerFont
     cell.alignment = wrapAlignmentTitle
   })
 
-  // Set the header values for the second row
-  const headerRowValues2 = {
-    D: 'R1',
-    E: 'R2',
-    F: 'R3',
-    G: 'R4',
-    H: 'R5',
-    I: 'Win',
-    J: 'Loss',
-    K: 'Win',
-    L: 'Draw',
-    M: 'Loss',
-    N: 'Ratio',
-    O: 'Active',
-    P: 'Grounded',
-    Q: 'Ratio',
-    R: 'Yellow Card',
-    S: 'Red Card'
-  }
-
-  Object.entries(headerRowValues2).forEach(([col, value]) => {
-    const cell = bracketsSheet.getCell(`${col}2`)
+  Object.entries(POOL_BRACKET_SUB_HEADER_VALUES).forEach(([col, value]) => {
+    const cell = poolsSheet.getCell(`${col}2`)
     cell.value = value
     cell.font = headerFont
     cell.alignment = wrapAlignmentValue
   })
-  bracketsSheet.columns.forEach(column => {
-    let maxLength = 0
-
-    column.eachCell({ includeEmpty: true }, cell => {
-      const cellValue = cell.value
-      let cellLength = (cellValue && cellValue.toString().length) || 0
-      cellLength += 2
-      if (cellLength > maxLength) {
-        maxLength = cellLength
-      }
-    })
-    column.width = maxLength
-  })
 }
 
-export default generateBracketsSheet
+export default generatePoolsSheet
