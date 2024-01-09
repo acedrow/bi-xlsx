@@ -71,38 +71,37 @@ const addTeamsToPoolsSheet = (poolsSheet, teams) => {
   }
 }
 
-const generatePoolsSheet = (workbook, { teams }) => {
+const populatePoolsBracketsSheet = (sheet, { teams }) => {
   const headerFont = getFont(11, true)
   const wrapAlignmentTitle = { vertical: 'middle', horizontal: 'center', wrapText: true }
   const wrapAlignmentValue = { vertical: 'middle', horizontal: 'center', wrapText: false }
-  const poolsSheet = workbook.addWorksheet('pools')
-  poolsSheet.columns = POOLS_BRACKETS_COLS
+  sheet.columns = POOLS_BRACKETS_COLS
 
-  addTeamsToPoolsSheet(poolsSheet, teams)
+  addTeamsToPoolsSheet(sheet, teams)
 
   // Merge cells for the header
-  poolsSheet.mergeCells('A1:A2')
-  poolsSheet.mergeCells('B1:B2')
-  poolsSheet.mergeCells('C1:C2')
-  poolsSheet.mergeCells('D1:H1')
-  poolsSheet.mergeCells('I1:J1')
-  poolsSheet.mergeCells('K1:N1')
-  poolsSheet.mergeCells('O1:Q1')
-  poolsSheet.mergeCells('R1:S1')
+  sheet.mergeCells('A1:A2')
+  sheet.mergeCells('B1:B2')
+  sheet.mergeCells('C1:C2')
+  sheet.mergeCells('D1:H1')
+  sheet.mergeCells('I1:J1')
+  sheet.mergeCells('K1:N1')
+  sheet.mergeCells('O1:Q1')
+  sheet.mergeCells('R1:S1')
 
   Object.entries(POOL_BRACKET_HEADER_VALUES).forEach(([col, value]) => {
-    const cell = poolsSheet.getCell(`${col}1`)
+    const cell = sheet.getCell(`${col}1`)
     cell.value = value
     cell.font = headerFont
     cell.alignment = wrapAlignmentTitle
   })
 
   Object.entries(POOL_BRACKET_SUB_HEADER_VALUES).forEach(([col, value]) => {
-    const cell = poolsSheet.getCell(`${col}2`)
+    const cell = sheet.getCell(`${col}2`)
     cell.value = value
     cell.font = headerFont
     cell.alignment = wrapAlignmentValue
   })
 }
 
-export default generatePoolsSheet
+export default populatePoolsBracketsSheet

@@ -47,7 +47,7 @@ const generateHeaderRows = (worksheet, eventName, date, location) => {
     A: 'Event Location:',
     B: location,
     T: 'Finals Type:',
-    W: 'Round Robin',
+    W: 'Bracket',
     Y: 'Tier Mult.',
     Z: { formula: '=IF(Z3="Regional",1.5,IF(Z3="Conference",2,1))' }
   })
@@ -174,13 +174,12 @@ const generateTeamDataRows = (worksheet, teams) => {
   )
 }
 
-const generateResultsSheet = (workbook, { eventName, date, location, teams, tournamentType }) => {
-  const resultsSheet = workbook.addWorksheet('results')
-  resultsSheet.columns = RESULTS_COLS
-  generateTitleRows(resultsSheet)
-  generateHeaderRows(resultsSheet, eventName, date, location, teams)
-  generateTeamHeaders(resultsSheet, tournamentType)
-  generateTeamDataRows(resultsSheet, teams)
+const generateResultsSheet = (sheet, { eventName, date, location, teams, tournamentType }) => {
+  sheet.columns = RESULTS_COLS
+  generateTitleRows(sheet)
+  generateHeaderRows(sheet, eventName, date, location, teams)
+  generateTeamHeaders(sheet, tournamentType)
+  generateTeamDataRows(sheet, teams)
 }
 
 export default generateResultsSheet
