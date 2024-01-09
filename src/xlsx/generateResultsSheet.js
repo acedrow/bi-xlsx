@@ -97,14 +97,14 @@ const generateTeamHeaders = (worksheet, tournamentType) => {
     D: 'Fw',
     E: 'Fl',
     F: 'Ff',
-    G: 'Fw/F',
+    G: 'Fw%',
     H: 'F/T',
     // Rounds
     I: 'Rw',
     J: 'Rd',
     K: 'Rl',
     L: 'Rf',
-    M: 'Rw/R',
+    M: 'Rw%',
     // Active/Grounded
     N: 'A',
     O: 'A/R',
@@ -169,6 +169,9 @@ const generateTeamDataRows = (worksheet, teams) => {
       Y: { formula: `=IF(X${rowIndex}=3,W${rowIndex}+2,IF(X${rowIndex}=2,W${rowIndex}+4,IF(X${rowIndex}=1,W${rowIndex}+6,W${rowIndex})))` },
       Z: { formula: `=Y${rowIndex}*$Z$4` }
     })
+    addedRow.getCell('G').numFmt = '0%'
+    addedRow.getCell('M').numFmt = '0%'
+
     addedRow.font = getFont(11, false)
     addedRow.getCell('A').fill = TEAM_ROW_HIGHLIGHT_PROPS.fill
     addedRow.getCell('A').border = {
