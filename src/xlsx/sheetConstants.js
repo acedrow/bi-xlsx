@@ -1,4 +1,8 @@
 const TITLE_ROW_BACKGROUND_COLOR_ARGB = 'ffabcb95'
+const YELLOW_HIGHLIGHT = 'ffff00'
+const STANDARD_CELL_OUTLINE = 'ffa6a6a6'
+const ARGB_GREEN = 'FF00FF00'
+const ARGB_RED = 'FFFF0000'
 
 // the first row on the results sheet that we show data:
 const RESULTS_TEAM_ROW_START = 7
@@ -123,6 +127,15 @@ const TITLE_ROW_PROPS = {
   alignment: { horizontal: 'center' }
 }
 
+const TEAM_ROW_HIGHLIGHT_PROPS = {
+  fill: {
+    type: 'pattern',
+    pattern: 'solid',
+    fgColor: { argb: YELLOW_HIGHLIGHT }
+  },
+  alignment: { horizontal: 'center' }
+}
+
 const EVENT_TIERS = [
   'Classic', 'Regional', 'Conference'
 ]
@@ -164,5 +177,9 @@ export {
   TOURNAMENT_TYPE_FIGHTERS,
   TEST_DATA,
   POOL_BRACKET_SUB_HEADER_VALUES,
-  POOL_BRACKET_HEADER_VALUES
+  POOL_BRACKET_HEADER_VALUES,
+  TEAM_ROW_HIGHLIGHT_PROPS,
+  STANDARD_CELL_OUTLINE,
+  ARGB_GREEN,
+  ARGB_RED
 }

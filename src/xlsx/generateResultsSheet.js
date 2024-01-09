@@ -1,4 +1,4 @@
-import { RESULTS_COLS, RESULTS_TEAM_ROW_START, TITLE_ROW_PROPS, TOURNAMENT_TYPE_TEAMS, getFont } from './sheetConstants.js'
+import { RESULTS_COLS, RESULTS_TEAM_ROW_START, STANDARD_CELL_OUTLINE, TEAM_ROW_HIGHLIGHT_PROPS, TITLE_ROW_PROPS, TOURNAMENT_TYPE_TEAMS, getFont } from './sheetConstants.js'
 // sheet 1 Results
 const generateTitleRows = (worksheet) => {
 // ROW 1
@@ -170,6 +170,20 @@ const generateTeamDataRows = (worksheet, teams) => {
       Z: { formula: `=Y${rowIndex}*$Z$4` }
     })
     addedRow.font = getFont(11, false)
+    addedRow.getCell('A').fill = TEAM_ROW_HIGHLIGHT_PROPS.fill
+    addedRow.getCell('A').border = {
+      top: { style: 'thin', color: { argb: STANDARD_CELL_OUTLINE } },
+      left: { style: 'thin', color: { argb: STANDARD_CELL_OUTLINE } },
+      bottom: { style: 'thin', color: { argb: STANDARD_CELL_OUTLINE } },
+      right: { style: 'thin', color: { argb: STANDARD_CELL_OUTLINE } }
+    }
+    addedRow.getCell('B').fill = TEAM_ROW_HIGHLIGHT_PROPS.fill
+    addedRow.getCell('B').border = {
+      top: { style: 'thin', color: { argb: STANDARD_CELL_OUTLINE } },
+      left: { style: 'thin', color: { argb: STANDARD_CELL_OUTLINE } },
+      bottom: { style: 'thin', color: { argb: STANDARD_CELL_OUTLINE } },
+      right: { style: 'thin', color: { argb: STANDARD_CELL_OUTLINE } }
+    }
   }
   )
 }

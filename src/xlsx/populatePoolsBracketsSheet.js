@@ -1,4 +1,4 @@
-import { NUMBER_FIGHTS_POOLS, POOLS_BRACKETS_COLS, POOLS_TEAM_ROW_START, POOL_BRACKET_HEADER_VALUES, POOL_BRACKET_SUB_HEADER_VALUES, getFont } from './sheetConstants.js'
+import { ARGB_GREEN, ARGB_RED, NUMBER_FIGHTS_POOLS, POOLS_BRACKETS_COLS, POOLS_TEAM_ROW_START, POOL_BRACKET_HEADER_VALUES, POOL_BRACKET_SUB_HEADER_VALUES, getFont } from './sheetConstants.js'
 
 // adding all teams to to the pools
 const addTeamsToPoolsSheet = (poolsSheet, teams) => {
@@ -70,6 +70,30 @@ const addTeamsToPoolsSheet = (poolsSheet, teams) => {
     }
   }
 }
+const addConditionalFormatting = (sheet) => {
+  sheet.addConditionalFormatting({
+    ref: 'I3:I122',
+    rules: [
+      {
+        type: 'cellIs',
+        formulae: [1],
+        operator: 'equal',
+        style: { fill: { type: 'pattern', pattern: 'solid', bgColor: { argb: ARGB_GREEN } } }
+      }
+    ]
+  })
+  sheet.addConditionalFormatting({
+    ref: 'J3:J122',
+    rules: [
+      {
+        type: 'cellIs',
+        formulae: [1],
+        operator: 'equal',
+        style: { fill: { type: 'pattern', pattern: 'solid', bgColor: { argb: ARGB_RED } } }
+      }
+    ]
+  })
+}
 
 const populatePoolsBracketsSheet = (sheet, { teams }) => {
   const headerFont = getFont(11, true)
@@ -102,6 +126,8 @@ const populatePoolsBracketsSheet = (sheet, { teams }) => {
     cell.font = headerFont
     cell.alignment = wrapAlignmentValue
   })
+
+  addConditionalFormatting(sheet)
 }
 
 export default populatePoolsBracketsSheet
