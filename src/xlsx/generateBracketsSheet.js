@@ -1,3 +1,4 @@
+// TODO: currently this is just copy-pasted from pools, not great form.
 import { NUMBER_FIGHTS_POOLS, POOLS_BRACKETS_COLS, POOLS_TEAM_ROW_START, POOL_BRACKET_HEADER_VALUES, POOL_BRACKET_SUB_HEADER_VALUES, getFont } from './sheetConstants.js'
 
 // adding all teams to to the pools
