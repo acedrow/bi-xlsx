@@ -1,4 +1,4 @@
-import { ARGB_GREEN, ARGB_RED, NUMBER_FIGHTS_POOLS, POOLS_BRACKETS_COLS, POOLS_TEAM_ROW_START, POOL_BRACKET_HEADER_VALUES, POOL_BRACKET_SUB_HEADER_VALUES, getFont } from './sheetConstants.js'
+import { ARGB_GREEN, ARGB_LIGHT_GRAY, ARGB_RED, ARGB_WHITE, NUMBER_FIGHTS_POOLS, POOLS_BRACKETS_COLS, POOLS_TEAM_ROW_START, POOL_BRACKET_HEADER_VALUES, POOL_BRACKET_SUB_HEADER_VALUES, getFont } from './sheetConstants.js'
 
 // adding all teams to to the pools
 const addTeamsToPoolsSheet = (poolsSheet, teams) => {
@@ -34,7 +34,7 @@ const addTeamsToPoolsSheet = (poolsSheet, teams) => {
       poolsSheet.mergeCells(`A${startRow}:A${endRow}`)
 
       // Set background color for both rows
-      const backgroundColor = i % 4 === 1 ? { argb: 'F2F3F4' } : { argb: 'FFFFFFFF' }
+      const backgroundColor = i % 4 === 1 ? { argb: ARGB_LIGHT_GRAY } : { argb: ARGB_WHITE }
       addedRow.fill = {
         type: 'pattern',
         pattern: 'solid',

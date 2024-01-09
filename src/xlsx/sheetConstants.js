@@ -3,6 +3,8 @@ const YELLOW_HIGHLIGHT = 'ffff00'
 const STANDARD_CELL_OUTLINE = 'ffa6a6a6'
 const ARGB_GREEN = 'FF00FF00'
 const ARGB_RED = 'FFFF0000'
+const ARGB_WHITE = 'FFFFFFFF'
+const ARGB_LIGHT_GRAY = 'FFD9DADB'
 
 // the first row on the results sheet that we show data:
 const RESULTS_TEAM_ROW_START = 7
@@ -181,5 +183,7 @@ export {
   TEAM_ROW_HIGHLIGHT_PROPS,
   STANDARD_CELL_OUTLINE,
   ARGB_GREEN,
-  ARGB_RED
+  ARGB_RED,
+  ARGB_WHITE,
+  ARGB_LIGHT_GRAY
 }
